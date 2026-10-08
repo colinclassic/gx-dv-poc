@@ -1,0 +1,76 @@
+# ==============================================================================
+# Declarative Validation Rules Specification
+# Easily referenced by Jupyter Notebooks to construct Great Expectations suites
+# ==============================================================================
+
+tables:
+  yellow_tripdata:
+    description: "NYC Yellow Taxi Trip Data expectations for Parquet ingestion"
+    primary_key: ["VendorID", "tpep_pickup_datetime"]
+    columns:
+      VendorID:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "critical" }
+          - type: "expect_column_values_to_be_in_set"
+            kwargs:
+              value_set: [1, 2, 6, 7]
+            meta: { severity: "high" }
+
+      tpep_pickup_datetime:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "critical" }
+
+      tpep_dropoff_datetime:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "critical" }
+
+      trip_distance:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }
+          - type: "expect_column_values_to_be_between"
+            kwargs:
+              min_value: 0.0
+            meta: { severity: "medium" }
+
+      PULocationID:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }
+          - type: "expect_column_values_to_be_in_set"
+            kwargs:
+              lookup_file: "data-files/taxi_zone_lookup.csv"
+              lookup_column: "LocationID"
+            meta: { severity: "critical" }
+
+      DOLocationID:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }
+          - type: "expect_column_values_to_be_in_set"
+            kwargs:
+              lookup_file: "data-files/taxi_zone_lookup.csv"
+              lookup_column: "LocationID"
+            meta: { severity: "critical" }
+
+      payment_type:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }
+          - type: "expect_column_values_to_be_in_set"
+            kwargs:
+              value_set: [0, 1, 2, 3, 4, 5, 6]
+            meta: { severity: "medium" }
+
+      fare_amount:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }
+
+      total_amount:
+        expectations:
+          - type: "expect_column_values_to_not_be_null"
+            meta: { severity: "high" }

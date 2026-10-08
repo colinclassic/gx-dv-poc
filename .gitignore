@@ -37,9 +37,9 @@ data/*.sqlite3
 data/*.parquet
 data/*.csv
 data/tmp/
-data-file/*.pdf
-data-file/*.parquet
-data-file/*.csv
+data-files/*.pdf
+data-files/*.parquet
+data-files/*.csv
 
 # Logs
 *.log

@@ -1,0 +1,67 @@
+# ==============================================================================
+# ETL Data Quality Pipeline Master Configuration
+# ==============================================================================
+
+version: "1.0"
+
+pipeline:
+  name: "etl_data_quality_pipeline"
+  description: "Automated Data Quality Validation checks across Ingestion, Staging, and Analytics layers"
+  environment: "${ENVIRONMENT:development}"
+
+# Pipeline Validation Stages
+stages:
+  ingestion:
+    description: "Validation checks on raw data files (CSV/Parquet/JSON) before loading"
+    suite_name: "ingestion_raw_checks"
+    data_assets:
+      - name: "yellow_tripdata"
+        format: "parquet"
+        path: "data-files/yellow_tripdata_2025-02.parquet"
+        criticality: "high"
+
+  staging:
+    description: "Validation checks post-cleaning & type coercion in Staging DB"
+    suite_name: "staging_cleaned_checks"
+    data_assets:
+      - name: "stg_customers"
+        connection: "${RAW_DATA_DB_URL}"
+        table: "stg_customers"
+        criticality: "high"
+      - name: "stg_orders"
+        connection: "${STAGING_DATA_DB_URL}"
+        table: "stg_orders"
+        criticality: "medium"
+
+  curated:
+    description: "Business metric integrity & analytical correctness checks"
+    suite_name: "curated_analytics_checks"
+    data_assets:
+      - name: "fact_daily_sales"
+        connection: "${WAREHOUSE_DB_URL}"
+        table: "fact_daily_sales"
+        criticality: "high"
+
+# Validation Enforcement & Failure Thresholds
+thresholds:
+  critical_failure_action: "abort_pipeline" # Options: abort_pipeline, log_warning, notify_only
+  max_allowable_null_percentage: 0.02         # Max 2% missing values for non-critical columns
+  max_allowable_duplicate_percentage: 0.00    # 0% duplicates on primary keys
+
+# Data Docs & Reporting Output Configuration
+reports:
+  generate_data_docs: true
+  docs_output_dir: "${OUTPUT_DOCS_DIR:./gx/uncommitted/data_docs}"
+  export_json_summary: true
+  json_summary_path: "./data/reports/latest_dq_summary.json"
+
+# Alerting & Actions
+notifications:
+  enabled: false
+  slack:
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    channel: "#etl-dq-alerts"
+    notify_on: ["failure", "critical_warning"]
+  email:
+    recipients: ["${NOTIFICATION_EMAIL}"]
+    notify_on: ["failure"]

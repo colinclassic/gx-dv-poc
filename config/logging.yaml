@@ -1,0 +1,41 @@
+# ==============================================================================
+# ETL Data Quality Logging Configuration
+# ==============================================================================
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  json:
+    format: '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "module": "%(name)s", "message": "%(message)s"}'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: json
+    filename: "logs/data_quality.log"
+    encoding: utf8
+
+loggers:
+  great_expectations:
+    level: WARNING
+    handlers: [console]
+    propagate: false
+
+  utils.dq_helper:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console]
