@@ -1,0 +1,46 @@
+# Environment & Secrets
+.DS_Store
+.env
+*.env
+*.pem
+*.key
+
+# Jupyter Notebook Checkpoints & Cache
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+.virtual_documents/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Great Expectations Uncommitted Artifacts
+gx/uncommitted/
+!gx/uncommitted/.gitkeep
+gx/plugins/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Data Files & Local Databases (Ignore sample data created during pipeline runs)
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/*.parquet
+data/*.csv
+data/tmp/
+data-file/*.pdf
+data-file/*.parquet
+data-file/*.csv
+
+# Logs
+*.log
+logs/

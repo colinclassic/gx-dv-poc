@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gx-dv-poc"
+version = "0.1.0"
+description = "ETL Pipeline Data Quality Validation POC using Great Expectations and Jupyter Notebooks"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "great_expectations>=0.18.0",
+    "pandas>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "PyYAML>=6.0",
+    "duckdb>=0.9.0",
+    "sqlalchemy>=2.0.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "W"]
